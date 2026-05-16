@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  David Esteban — Portafolio Profesional                         ║
+  ║  Archivo único: HTML + CSS + JS embebidos                       ║
+  ║  Listo para subir directo a GitHub Pages                        ║
+  ╚══════════════════════════════════════════════════════════════════╝
+
+  ESTRUCTURA GENERAL:
+  1. <head>       → configuración invisible (fuentes, colores, CSS)
+  2. <header>     → barra de navegación fija
+  3. <section#hero>       → presentación principal
+  4. <section#servicios>  → 3 pilares de servicios
+  5. <section#portafolio> → tarjetas de proyectos
+  6. <section#sobre-mi>   → perfil híbrido
+  7. <footer>             → contacto y redes
+  8. <script>    → lógica JavaScript al final del body
+-->
+
+<!-- ① DOCTYPE: le dice al navegador que esto es HTML5 moderno -->
+<html lang="es">
+<!-- lang="es": indica el idioma, mejora SEO y accesibilidad con lectores de pantalla -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     HEAD: Todo lo que el usuario NO ve pero que configura la página
+     ═══════════════════════════════════════════════════════════ -->
+<head>
+
+  <!-- ② Codificación UTF-8: permite tildes, ñ, emojis y símbolos especiales -->
+  <meta charset="UTF-8" />
+
+  <!-- ③ Viewport responsivo: sin esto, los celulares muestran la versión de escritorio empequeñecida -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ④ Título de pestaña + título en resultados de Google -->
+  <title>SoyEsteban | Ingeniería, Software &amp; Manufactura</title>
+
+  <!-- ⑤ Descripción para Google (SEO). Aparece debajo del título en buscadores -->
+  <meta name="description" content="Ingeniero Mecatrónico, Desarrollador Full Stack y Diseñador de Hardware. Diseño 3D, automatización con Python y asesoría técnica." />
+
+  <!-- ⑥ preconnect: le dice al navegador que se conecte YA a Google Fonts
+       antes de descargar el CSS, ahorrando tiempo de carga -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- ⑦ Importa 3 fuentes tipográficas desde Google Fonts:
+       - Syne 700/800       → títulos grandes, impacto visual
+       - Share Tech Mono    → look de terminal/código, para etiquetas
+       - DM Sans 300/400/500 → texto de cuerpo, legible y moderno
+       display=swap: muestra texto con fuente genérica mientras cargan las Google Fonts,
+       evitando que la página aparezca en blanco -->
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- ════════════════════════════════════════════════════════
+       ⑧ TODOS LOS ESTILOS CSS DEL SITIO (embebidos aquí)
+       ════════════════════════════════════════════════════════ -->
+  <style>
+
+    /* ─────────────────────────────────────────────
+       VARIABLES GLOBALES (:root)
+       :root = el elemento HTML raíz = aplica a TODO el documento.
+       Las variables CSS empiezan con -- y se usan como var(--nombre)
+       Ventaja: cambias UN valor y se actualiza en todo el sitio.
+    ───────────────────────────────────────────── */
+    :root {
+      /* Paleta de fondos (de más oscuro a más claro) */
+      --bg-0:      #050709;          /* negro casi puro, para contrastes extremos */
+      --bg-1:      #0b0f14;          /* fondo principal de la página */
+      --bg-2:      #0f1520;          /* fondo de secciones alternas */
+      --bg-3:      #141c28;          /* fondo de tarjetas (cards) */
+      --bg-4:      #1a2535;          /* fondo de elementos hover */
+
+      /* Colores neón de acento */
+      --cyan:           #00c8ff;              /* azul neón — color primario del sitio */
+      --cyan-dim:       rgba(0,200,255,0.10); /* versión muy tenue para fondos */
+      --cyan-mid:       rgba(0,200,255,0.20); /* versión media para bordes en hover */
+      --cyan-glow:      rgba(0,200,255,0.40); /* para sombras brillantes (box-shadow) */
+      --green:          #00ff88;              /* verde cyberpunk — color secundario */
+      --green-dim:      rgba(0,255,136,0.10); /* versión tenue del verde */
+      --green-glow:     rgba(0,255,136,0.35); /* sombra verde */
+      --amber:          #ffaa00;              /* naranja ámbar — 3er acento (academia) */
+      --amber-dim:      rgba(255,170,0,0.10);
+
+      /* Bordes */
+      --border:         rgba(0,200,255,0.10); /* borde sutil por defecto */
+      --border-bright:  rgba(0,200,255,0.35); /* borde visible en hover */
+
+      /* Texto */
+      --text-1: #e8f0f8;   /* blanco suave — títulos y elementos importantes */
+      --text-2: #8fa8c0;   /* gris azulado — párrafos y descripciones */
+      --text-3: #4a6a85;   /* gris oscuro — texto secundario, placeholders */
+
+      /* Tipografías */
+      --font-title:   'Syne', sans-serif;           /* para h1, h2, h3 */
+      --font-mono:    'Share Tech Mono', monospace;  /* para etiquetas tipo código */
+      --font-body:    'DM Sans', sans-serif;         /* para párrafos */
+
+      /* Transición estándar reutilizable */
+      --transition: 0.3s ease;
+
+      /* Radio de bordes redondeados estándar */
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  20px;
+    }
+
+    /* ─────────────────────────────────────────────
+       RESET CSS
+       Los navegadores (Chrome, Firefox, Safari) aplican
+       estilos por defecto distintos entre sí. Este reset
+       los elimina para que todos partan desde el mismo punto.
+    ───────────────────────────────────────────── */
+    *, *::before, *::after {
+      /* box-sizing: border-box → el padding y border se incluyen
+         DENTRO del ancho declarado. Sin esto, padding SUMA al ancho,
+         causando desbordamientos inesperados. */
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       HTML base: scroll suave para los links del menú
+    ───────────────────────────────────────────── */
+    html {
+      scroll-behavior: smooth; /* saltos de sección animados al hacer clic en nav */
+    }
+
+    /* ─────────────────────────────────────────────
+       BODY: estilos base de toda la página
+    ───────────────────────────────────────────── */
+    body {
+      background-color: var(--bg-1);  /* fondo oscuro principal */
+      color: var(--text-1);           /* color de texto por defecto: blanco suave */
+      font-family: var(--font-body);  /* DM Sans para todo */
+      font-size: 16px;                /* tamaño base (1rem = 16px) */
+      line-height: 1.7;               /* altura de línea, mejora la legibilidad */
+      overflow-x: hidden;             /* evita scroll horizontal accidental */
+    }
+
+    /* ─────────────────────────────────────────────
+       LINKS
+    ───────────────────────────────────────────── */
+    a {
+      color: var(--cyan);
+      text-decoration: none;          /* sin subrayado */
+      transition: color var(--transition);
+    }
+    a:hover { color: var(--green); }
+
+    /* ─────────────────────────────────────────────
+       EFECTO DE FONDO: cuadrícula sutil tipo blueprint
+       Usa gradiente lineal para dibujar líneas muy tenues
+       que dan profundidad sin distraer.
+    ───────────────────────────────────────────── */
+    body::before {
+      content: '';                    /* necesario para que ::before exista */
+      position: fixed;                /* se queda fijo aunque hagas scroll */
+      inset: 0;                       /* cubre toda la pantalla (top/right/bottom/left = 0) */
+      /* Dos gradientes lineales superpuestos forman la cuadrícula:
+         uno horizontal y uno vertical, ambos con líneas de 1px */
+      background-image:
+        linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;     /* cada cuadrado mide 50x50px */
+      pointer-events: none;           /* el fondo NO intercepta clics del usuario */
+      z-index: 0;                     /* detrás de todo el contenido */
+    }
+
+    /* ─────────────────────────────────────────────
+       UTILIDADES GLOBALES REUTILIZABLES
+    ───────────────────────────────────────────── */
+
+    /* Contenedor centrado con ancho máximo: evita que el contenido
+       se extienda demasiado en pantallas grandes */
+    .container {
+      max-width: 1100px;     /* ancho máximo del contenido */
+      margin: 0 auto;        /* centrado horizontal */
+      padding: 0 24px;       /* margen lateral en pantallas pequeñas */
+    }
+
+    /* Etiqueta tipo código que aparece encima de los títulos de sección */
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--cyan);
+      text-transform: uppercase;   /* todo en mayúsculas */
+      letter-spacing: 3px;         /* espacio entre letras */
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* Título principal de cada sección */
+    .section-title {
+      font-family: var(--font-title);
+      font-size: clamp(28px, 4vw, 42px); /* clamp: mínimo 28px, ideal 4% del ancho, máximo 42px */
+      font-weight: 800;
+      color: var(--text-1);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    /* Párrafo descriptivo debajo del título de sección */
+    .section-desc {
+      font-size: 16px;
+      color: var(--text-2);
+      max-width: 560px;
+      line-height: 1.8;
+    }
+
+    /* Clase para destacar texto con el color neón cyan */
+    .accent-cyan  { color: var(--cyan); }
+    /* Clase para destacar texto con el color verde */
+    .accent-green { color: var(--green); }
+
+    /* ─────────────────────────────────────────────
+       ════ NAVEGACIÓN (HEADER) ════
+       position: fixed → se queda arriba aunque hagas scroll
+    ───────────────────────────────────────────── */
+    .navbar {
+      position: fixed;           /* fija en la parte superior */
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;              /* encima de todo el resto del contenido */
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;       /* centra verticalmente el contenido */
+      justify-content: space-between; /* logo a la izquierda, links a la derecha */
+      /* Fondo con efecto glassmorphism oscuro:
+         backdrop-filter difumina lo que hay detrás */
+      background: rgba(5, 7, 9, 0.85);
+      backdrop-filter: blur(16px);          /* difumina el fondo detrás */
+      -webkit-backdrop-filter: blur(16px);  /* prefijo para Safari */
+      border-bottom: 1px solid var(--border); /* línea inferior sutil */
+      transition: background var(--transition);
+    }
+
+    /* Logo de texto en la navbar */
+    .navbar-logo {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      color: var(--text-1);
+      letter-spacing: 1px;
+    }
+    /* La parte ">" del logo en cyan para el look de terminal */
+    .navbar-logo span {
+      color: var(--cyan);
+      margin-right: 4px;
+    }
+
+    /* Contenedor de los links de navegación */
+    .navbar-links {
+      display: flex;
+      gap: 32px;          /* espacio entre links */
+      list-style: none;   /* quita los puntos de la lista <ul> */
+    }
+
+    /* Cada link de navegación */
+    .navbar-links a {
+      font-size: 13px;
+      color: var(--text-2);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color var(--transition);
+      position: relative; /* necesario para el ::after (línea bajo el link) */
+    }
+
+    /* Línea que aparece bajo el link al hacer hover */
+    .navbar-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;           /* comienza sin ancho */
+      height: 1px;
+      background: var(--cyan);
+      transition: width var(--transition); /* anima el ancho al hacer hover */
+    }
+    .navbar-links a:hover {
+      color: var(--text-1);
+    }
+    .navbar-links a:hover::after {
+      width: 100%;        /* al hover, la línea se extiende al 100% */
+    }
+
+    /* Botón de hamburguesa (☰) para móviles — oculto en escritorio */
+    .nav-toggle {
+      display: none;       /* oculto por defecto en desktop */
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text-1);
+      margin: 5px 0;
+      transition: var(--transition);
+    }
+
+    /* ─────────────────────────────────────────────
+       ════ HERO SECTION ════
+       La primera pantalla que ve el usuario
+    ───────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;         /* ocupa al menos el 100% de la altura de la pantalla */
+      display: flex;
+      align-items: center;       /* centra verticalmente */
+      padding: 120px 24px 80px;  /* 120px arriba para que no tape la navbar fija */
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Círculo de luz de fondo (efecto radial glow detrás del texto) */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%); /* centra el círculo horizontalmente */
+      width: 800px;
+      height: 800px;
+      /* Gradiente radial: desde cyan muy tenue al centro hasta transparente */
+      background: radial-gradient(circle, rgba(0,200,255,0.06) 0%, transparent 70%);
+      pointer-events: none;       /* no intercepta clics */
+    }
+
+    /* Contenido del Hero: limita el ancho para mejor lectura */
+    .hero-content {
+      max-width: 820px;
+      position: relative;
+      z-index: 1;   /* encima del efecto ::after */
+    }
+
+    /* Etiqueta de estado tipo terminal: "// DISPONIBLE PARA PROYECTOS" */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--cyan-dim);
+      border: 1px solid var(--border-bright);
+      border-radius: 999px;   /* 999px = completamente ovalado (pill) */
+      padding: 6px 16px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      margin-bottom: 32px;
+      text-transform: uppercase;
+    }
+
+    /* Punto verde que parpadea (indica "disponible/online") */
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;        /* círculo */
+      background: var(--green);
+      /* animation: nombre duración timing iteraciones */
+      animation: pulse 2s ease-in-out infinite; /* parpadeo continuo */
+    }
+
+    /* Definición de la animación pulse */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* Título principal H1: el nombre */
+    .hero-title {
+      font-family: var(--font-title);
+      /* clamp(mínimo, ideal, máximo) → responsivo sin media queries */
+      font-size: clamp(36px, 6vw, 76px);
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--text-1);
+      margin-bottom: 24px;
+    }
+
+    /* Parte del título que tiene el gradiente de color */
+    .hero-title .gradient-text {
+      /* text gradient: truco CSS — color de fondo visible solo en el texto */
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--green) 100%);
+      -webkit-background-clip: text;  /* recorta el fondo en forma de texto */
+      -webkit-text-fill-color: transparent; /* hace el texto transparente para ver el fondo */
+      background-clip: text;
+    }
+
+    /* Subtítulo del Hero */
+    .hero-subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-2);
+      line-height: 1.8;
+      max-width: 620px;
+      margin-bottom: 48px;
+      font-weight: 300;
+    }
+
+    /* Contenedor de los botones CTA */
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;  /* en móviles, los botones se apilan */
+    }
+
+    /* ─────────────────────────────────────────────
+       BOTONES REUTILIZABLES
+    ───────────────────────────────────────────── */
+
+    /* Botón primario: sólido con fondo cyan */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--cyan);
+      color: #000;                /* texto negro sobre fondo claro */
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition);
+      /* Sombra exterior con glow cyan */
+      box-shadow: 0 0 20px var(--cyan-glow);
+      letter-spacing: 0.3px;
+    }
+    .btn-primary:hover {
+      background: #00e5ff;        /* tono cyan más brillante al hover */
+      color: #000;
+      box-shadow: 0 0 35px var(--cyan-glow); /* glow más intenso */
+      transform: translateY(-2px); /* sube 2px (efecto "levitación") */
+    }
+    .btn-primary:active {
+      transform: translateY(0);   /* vuelve a su lugar al hacer clic */
+    }
+
+    /* Botón secundario: contorno (outline) */
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--text-1);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-bright);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition);
+      letter-spacing: 0.3px;
+    }
+    .btn-secondary:hover {
+      background: var(--cyan-dim);
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    /* ─────────────────────────────────────────────
+       MÉTRICAS / STATS del Hero
+       Fila de números que resumen la experiencia
+    ───────────────────────────────────────────── */
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 64px;
+      flex-wrap: wrap;  /* se adapta a móviles */
+    }
+
+    .stat-item {
+      border-left: 2px solid var(--cyan);  /* línea izquierda cyan */
+      padding-left: 16px;
+    }
+
+    .stat-number {
+      font-family: var(--font-title);
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-1);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-3);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    /* ─────────────────────────────────────────────
+       ════ SECCIONES GENERALES ════
+       Espaciado y separación estándar para todas las secciones
+    ───────────────────────────────────────────── */
+    section {
+      padding: 100px 0;
+      position: relative;
+      z-index: 1;   /* encima del fondo ::before del body */
+    }
+
+    /* Secciones alternas con fondo ligeramente más claro */
+    section:nth-child(even) {
+      background: var(--bg-2);
+    }
+
+    /* Cabecera de sección: label + título + descripción */
+    .section-header {
+      margin-bottom: 60px;
+    }
+
+    /* ─────────────────────────────────────────────
+       ════ SECCIÓN SERVICIOS ════
+    ───────────────────────────────────────────── */
+
+    /* Grid de 3 columnas para las tarjetas de servicios */
+    .services-grid {
+      display: grid;
+      /* auto-fit: crea tantas columnas como quepan
+         minmax(300px, 1fr): mínimo 300px, máximo 1 fracción del espacio disponible
+         → en escritorio = 3 columnas, en móvil = 1 columna */
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    /* Tarjeta de servicio individual */
+    .service-card {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 36px 32px;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;   /* recorta el pseudo-elemento ::before */
+    }
+
+    /* Línea de color que aparece arriba de la card en hover */
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--card-accent, var(--cyan)); /* usa la variable local --card-accent */
+      transform: scaleX(0);       /* invisible por defecto (ancho 0) */
+      transform-origin: left;     /* la animación empieza desde la izquierda */
+      transition: transform 0.4s ease;
+    }
+
+    .service-card:hover {
+      background: var(--bg-4);
+      border-color: var(--border-bright);
+      transform: translateY(-6px); /* se eleva al hacer hover */
+      /* Sombra con el color de acento de la card */
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px var(--card-glow, var(--cyan-glow));
+    }
+    .service-card:hover::before {
+      transform: scaleX(1); /* la línea se extiende al 100% */
+    }
+
+    /* Ícono de la card: círculo con emoji o símbolo */
+    .service-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 24px;
+      background: var(--card-dim, var(--cyan-dim));
+      border: 1px solid var(--card-border, var(--border));
+    }
+
+    /* Título de la card de servicio */
+    .service-title {
+      font-family: var(--font-title);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    /* Descripción corta de la card */
+    .service-desc {
+      font-size: 14px;
+      color: var(--text-2);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    /* Lista de items dentro de la card */
+    .service-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .service-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    /* Marcador ">" antes de cada item (estilo terminal) */
+    .service-list li::before {
+      content: '›';
+      color: var(--card-accent, var(--cyan));
+      font-size: 18px;
+      line-height: 1.2;
+      flex-shrink: 0; /* no se comprime aunque el texto sea largo */
+    }
+
+    /* ─────────────────────────────────────────────
+       ════ SECCIÓN PORTAFOLIO ════
+    ───────────────────────────────────────────── */
+
+    /* Grid de proyectos: 2 columnas en desktop */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 24px;
+    }
+
+    /* Tarjeta de proyecto */
+    .project-card {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+
+    .project-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    }
+
+    /* Zona de imagen/placeholder del proyecto */
+    .project-thumb {
+      width: 100%;
+      height: 220px;
+      background: var(--bg-4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Imagen real del proyecto (cuando la agregues) */
+    .project-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;  /* recorta la imagen para que llene el espacio sin distorsionar */
+      transition: transform 0.5s ease;
+    }
+    .project-card:hover .project-thumb img {
+      transform: scale(1.05); /* zoom sutil en hover */
+    }
+
+    /* Texto del placeholder cuando no hay imagen */
+    .thumb-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-3);
+    }
+
+    .thumb-placeholder .thumb-icon {
+      font-size: 40px;
+      opacity: 0.5;
+    }
+
+    .thumb-placeholder span {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Tags de tecnologías sobre la imagen */
+    .project-tags {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(0,0,0,0.75);     /* fondo negro semitransparente */
+      border: 1px solid var(--border-bright);
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Tags con color verde */
+    .tag.green {
+      border-color: rgba(0,255,136,0.35);
+      color: var(--green);
+    }
+
+    /* Tags con color ámbar */
+    .tag.amber {
+      border-color: rgba(255,170,0,0.35);
+      color: var(--amber);
+    }
+
+    /* Contenido de texto de la tarjeta de proyecto */
+    .project-info {
+      padding: 24px;
+    }
+
+    .project-title {
+      font-family: var(--font-title);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 8px;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    /* Link de ver proyecto */
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: gap var(--transition);
+    }
+    .project-link:hover {
+      gap: 10px; /* la flecha se aleja del texto al hacer hover */
+      color: var(--cyan);
+    }
+
+    /* ─────────────────────────────────────────────
+       ════ SECCIÓN SOBRE MÍ ════
+    ───────────────────────────────────────────── */
+
+    /* Layout de 2 columnas: texto a la izquierda, skills a la derecha */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;  /* dos columnas iguales */
+      gap: 80px;
+      align-items: center;
+    }
+
+    /* Imagen/avatar del perfil */
+    .about-avatar {
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 1;              /* cuadrado perfecto */
+      background: var(--bg-3);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Marco decorativo animado alrededor del avatar */
+    .about-avatar::before {
+      content: '';
+      position: absolute;
+      inset: -2px;                  /* se sale 2px del contenedor */
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--cyan), transparent, var(--green));
+      z-index: -1;
+      animation: rotate-border 4s linear infinite; /* gira continuamente */
+    }
+
+    @keyframes rotate-border {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Placeholder del avatar (foto de perfil va aquí) */
+    .avatar-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      color: var(--text-3);
+    }
+    .avatar-placeholder .avatar-icon { font-size: 64px; }
+    .avatar-placeholder span {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+    }
+
+    /* Texto descriptivo del perfil */
+    .about-text p {
+      color: var(--text-2);
+      font-size: 15px;
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
+    /* Stack de tecnologías: grilla de pills con el nombre de cada herramienta */
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 32px;
+    }
+
+    /* Pill individual de tecnología */
+    .tech-pill {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-2);
+      letter-spacing: 0.5px;
+      transition: all var(--transition);
+    }
+    .tech-pill:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    /* ─────────────────────────────────────────────
+       ════ FOOTER ════
+    ───────────────────────────────────────────── */
+    footer {
+      background: var(--bg-0);         /* el negro más oscuro */
+      border-top: 1px solid var(--border);
+      padding: 80px 0 40px;
+    }
+
+    /* Grid del footer: links de navegación + redes sociales + texto final */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    /* Logo grande en el footer */
+    .footer-brand .brand-name {
+      font-family: var(--font-title);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-1);
+      margin-bottom: 12px;
+    }
+
+    .footer-brand p {
+      font-size: 14px;
+      color: var(--text-3);
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    /* Títulos de columnas del footer */
+    .footer-col h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      margin-bottom: 20px;
+    }
+
+    /* Links del footer */
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-col ul a {
+      font-size: 14px;
+      color: var(--text-3);
+      transition: color var(--transition);
+    }
+    .footer-col ul a:hover { color: var(--text-1); }
+
+    /* Iconos de redes sociales */
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    /* Botón de red social: círculo con icono/emoji */
+    .social-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      text-decoration: none;
+      transition: all var(--transition);
+      color: var(--text-2);
+    }
+    .social-btn:hover {
+      background: var(--cyan-dim);
+      border-color: var(--cyan);
+      transform: translateY(-3px);
+      color: var(--cyan);
+    }
+
+    /* Línea divisora */
+    .footer-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    /* Pie del footer: copyright + crédito */
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-3);
+      letter-spacing: 0.5px;
+    }
+
+    /* ─────────────────────────────────────────────
+       ════ BOTÓN FLOTANTE DE WHATSAPP ════
+       Permanece fijo en la esquina inferior derecha
+    ───────────────────────────────────────────── */
+    .whatsapp-fab {
+      position: fixed;              /* fijo en pantalla aunque hagas scroll */
+      bottom: 32px;
+      right: 32px;
+      z-index: 200;                 /* encima de todo, incluida la navbar */
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #25d366;          /* verde oficial de WhatsApp */
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 14px 20px;
+      border-radius: 999px;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      text-decoration: none;
+      transition: all var(--transition);
+      /* Ancho del texto controlado para la animación de expand/collapse */
+      overflow: hidden;
+      max-width: 56px;              /* empieza comprimido (solo el ícono) */
+    }
+    .whatsapp-fab:hover {
+      max-width: 260px;             /* se expande al hacer hover para mostrar texto */
+      box-shadow: 0 6px 28px rgba(37,211,102,0.6);
+      color: #fff;
+    }
+
+    /* Ícono de WhatsApp (SVG embebido como texto) */
+    .whatsapp-fab .wa-icon {
+      flex-shrink: 0;      /* el ícono no se comprime */
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    /* Texto del botón flotante */
+    .whatsapp-fab .wa-text {
+      white-space: nowrap;  /* el texto no hace salto de línea */
+      font-family: var(--font-body);
+    }
+
+    /* ─────────────────────────────────────────────
+       ════ ANIMACIONES DE ENTRADA ════
+       Las secciones aparecen con fade+slide al hacer scroll
+    ───────────────────────────────────────────── */
+
+    /* Estado inicial: invisible y desplazado 30px hacia abajo */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    /* Estado final: visible y en su posición */
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Delay escalonado para que cada card aparezca un poco después de la anterior */
+    .fade-in:nth-child(1) { transition-delay: 0s; }
+    .fade-in:nth-child(2) { transition-delay: 0.1s; }
+    .fade-in:nth-child(3) { transition-delay: 0.2s; }
+    .fade-in:nth-child(4) { transition-delay: 0.3s; }
+
+    /* ─────────────────────────────────────────────
+       ════ RESPONSIVO (MEDIA QUERIES) ════
+       Adaptaciones para pantallas pequeñas (móviles)
+       @media: "si el ancho de la pantalla es máximo X, aplica esto"
+    ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+
+      /* Oculta los links del menú en móvil */
+      .navbar-links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(5,7,9,0.98);
+        flex-direction: column;
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* Clase que activa el menú móvil (toggled por JS) */
+      .navbar-links.open { display: flex; }
+
+      /* Muestra el botón hamburguesa en móvil */
+      .nav-toggle { display: block; }
+
+      /* Hero: más compacto */
+      .hero { padding: 100px 24px 60px; }
+
+      /* Stats del Hero: solo 2 por fila */
+      .hero-stats { gap: 24px; }
+
+      /* Portafolio: 1 columna en móvil */
+      .portfolio-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Sobre mí: 1 columna apilada */
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      /* Avatar más pequeño en móvil */
+      .about-avatar {
+        max-width: 280px;
+        margin: 0 auto;
+      }
+
+      /* Footer: 1 columna */
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      /* Botón WhatsApp flotante: solo ícono en móvil */
+      .whatsapp-fab {
+        padding: 14px;
+        bottom: 24px;
+        right: 24px;
+      }
+    }
+
+  </style>
+</head>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BODY: Todo lo visible comienza aquí
+     ═══════════════════════════════════════════════════════════ -->
+<body>
+
+  <!-- ─────────────────────────────────────────────────────────
+       NAVBAR: Barra de navegación fija
+       role="banner" → semántica HTML5, indica que es el encabezado principal
+  ───────────────────────────────────────────────────────────── -->
+  <header role="banner">
+    <nav class="navbar" aria-label="Navegación principal">
+
+      <!-- Logo: texto en estilo terminal -->
+      <a href="#" class="navbar-logo" aria-label="Inicio">
+        <span>&gt;</span>Soy_Esteban
+      </a>
+
+      <!-- Links de navegación (lista semántica) -->
+      <!-- id="nav-links" → lo usará el JS para mostrar/ocultar en móvil -->
+      <ul class="navbar-links" id="nav-links">
+        <!-- href="#seccion" → scroll suave a la sección con ese id -->
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#portafolio">Portafolio</a></li>
+        <li><a href="#sobre-mi">Sobre mí</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+
+      <!-- Botón hamburguesa para móviles -->
+      <!-- aria-label: describe el botón para lectores de pantalla -->
+      <!-- aria-expanded: indica si el menú está abierto (accesibilidad) -->
+      <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span>  <!-- Las 3 barras del ícono hamburguesa (hechas con CSS) -->
+        <span></span>
+        <span></span>
+      </button>
+
+    </nav>
+  </header>
+
+  <!-- ─────────────────────────────────────────────────────────
+       MAIN: Contenido principal de la página
+       role="main" → semántica HTML5
+  ───────────────────────────────────────────────────────────── -->
+  <main role="main">
+
+    <!-- ═══════════════════════════
+         1. HERO SECTION
+         id="hero" → permite el scroll suave desde la navbar
+    ════════════════════════════════ -->
+    <section id="hero" class="hero">
+      <div class="hero-content">
+
+        <!-- Badge de disponibilidad -->
+        <div class="hero-badge">
+          <span class="dot" aria-hidden="true"></span>
+          Disponible para proyectos
+        </div>
+
+        <!-- Título principal H1: solo debe haber UNO en toda la página (SEO) -->
+        <h1 class="hero-title">
+          SoyEsteban<br/>
+          <!-- La parte con gradiente de color -->
+          <span class="gradient-text">Ingeniería, Software</span><br/>
+          &amp; Manufactura
+        </h1>
+
+        <!-- Subtítulo impactante -->
+        <p class="hero-subtitle">
+          <strong>Desarrollo de Hardware, Software y Soluciones a Medida.</strong><br>
+            Diseño de proyectos de robótica, mecatrónica y desarrollo web para cualquier presupuesto. 
+            Diseño y modelado e impresión 3D, programación avanzada (Python, C++, Assembler) e Inteligencia Artificial. 
+            Ofrezco soporte técnico especializado en computadores, optimización de sistemas y tutorías en matemáticas.
+        </p>
+
+        <!-- Botones de llamado a la acción (CTA) -->
+        <div class="hero-cta">
+
+          <!-- Botón principal: abre WhatsApp con mensaje predefinido
+               id="cta-whatsapp" → el JS lo usa para abrir el link correcto -->
+          <a href="https://wa.me/573001234567" id="cta-whatsapp" class="btn-primary" target="_blank" rel="noopener noreferrer">
+            <!-- SVG ícono de WhatsApp embebido directamente en el HTML -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52 -.075 -.149 -.669 -1.612 -.916 -2.207 -.242 -.579 -.487 -.5 -.669 -.51 -.173 -.008 -.371 -.01 -.57 -.01 -.198 0 -.52 .074 -.792 .372 -.272 .297 -1.04 
+            Cotizar Proyecto / Asesoría
+          </a>
+
+          <!-- Botón secundario: va al portafolio -->
+          <a href="#portafolio" class="btn-secondary">
+            Ver Portafolio
+            <!-- Flecha →  como carácter HTML -->
+            <span aria-hidden="true">→</span>
+          </a>
+
+        </div>
+
+        <!-- Estadísticas resumidas -->
+        <div class="hero-stats">
+
+          <div class="stat-item">
+            <div class="stat-number accent-cyan">3+</div>
+            <div class="stat-label">Años de exp.</div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-number accent-cyan">20+</div>
+            <div class="stat-label">Proyectos</div>
+          </div>
+
+          
+
+          <div class="stat-item">
+            <div class="stat-number accent-green">100%</div>
+            <div class="stat-label">Comprometido</div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════
+         2. SECCIÓN SERVICIOS
+    ════════════════════════════════ -->
+    <section id="servicios">
+      <div class="container">
+
+        <!-- Encabezado de sección -->
+        <div class="section-header">
+          <span class="section-label">// 01 — Servicios</span>
+          <h2 class="section-title">Diseño de proyectos,mantenimiento de equipos, <br/> <span class="accent-cyan">desarrollo de software e impresion 3D.</span></h2>
+          <p class="section-desc">
+            Realizo proyectos si tienes la idea o el problema, sino tambien puedo ayudarte a realizar tu poryecto y enfocarlo a un problema.
+          </p>
+        </div>
+
+        <!-- Grid de tarjetas de servicios -->
+        <div class="services-grid">
+
+          <!-- ── TARJETA A: Diseño 3D & Prototipado ──
+               style="--card-accent: …" → variable CSS local solo para esta card
+               Permite que el ::before de .service-card use el color correcto -->
+          <article class="service-card fade-in"
+            style="
+              --card-accent: var(--cyan);
+              --card-glow: var(--cyan-glow);
+              --card-dim: var(--cyan-dim);
+              --card-border: rgba(0,200,255,0.25);
+            ">
+            <div class="service-icon">🖨️</div>
+            <h3 class="service-title">Diseño 3D &amp;<br/>Prototipado Rápido</h3>
+            <p class="service-desc">Laboratorio 3D — Boceto de piezas, Protipo terminado</p>
+            <ul class="service-list">
+              <li>Modelado CAD profesional en SolidWorks (ensambles, piezas y mecanismos complejos)</li>
+              <li>Impresión 3D de alta precisión: prototipos express para tesistas e inventores</li>
+              <li>Repuestos técnicos descontinuados: reproducción fiel por ingeniería inversa</li>
+              <li>Ingeniería inversa de componentes mecánicos dañados o sin documentación</li>
+            </ul>
+          </article>
+
+          <!-- ── TARJETA B: Desarrollo de Software ── -->
+          <article class="service-card fade-in"
+            style="
+              --card-accent: var(--green);
+              --card-glow: var(--green-glow);
+              --card-dim: var(--green-dim);
+              --card-border: rgba(0,255,136,0.25);
+            ">
+            <div class="service-icon">⚙️</div>
+            <h3 class="service-title">Desarrollo de Software<br/>&amp; Automatización</h3>
+            <p class="service-desc">Desarrollo de páginas web, automatizaciones y estructuración de bases de datos</p>
+            <ul class="service-list">
+              <li>Scripts de automatización y desarrollo backend en Python</li>
+              <li>Estructuración y optimización de bases de datos con SQL</li>
+              <li>Configuración y despliegue en entornos Linux (Ubuntu/Debian)</li>
+              <li>Control de versiones y flujos de trabajo con Git y GitHub</li>
+            </ul>
+          </article>
+
+          <!-- ── TARJETA C: Academia Técnica ── -->
+          <article class="service-card fade-in"
+            style="
+              --card-accent: var(--amber);
+              --card-glow: rgba(255,170,0,0.35);
+              --card-dim: var(--amber-dim);
+              --card-border: rgba(255,170,0,0.25);
+            ">
+            <div class="service-icon">🎓</div>
+            <h3 class="service-title">Academia Técnica<br/>&amp; Asesoría de Ingeniería</h3>
+            <p class="service-desc">Tutorías personalizadas y desarrollo de proyectos de grado con acompañamiento real.</p>
+            <ul class="service-list">
+              <li>Tutorías universitarias en Matemáticas: Cálculo diferencial/integral y Álgebra Lineal</li>
+              <li>Asesoría y desarrollo de proyectos de grado en Mecatrónica y Electrónica</li>
+              <li>Proyectos con Arduino, ESP32-Raspberry-pics y microcontroladores desde cero</li>
+              <li>Robótica básica e intermedia: diseño mecánico + programación integrada</li>
+            </ul>
+          </article>
+          <!-- ── TARJETA D: Reparacion Tecnica ── -->
+          <article class="service-card fade-in"
+            style="
+              --card-accent: var(--amber);
+              --card-glow: rgba(255,170,0,0.35);
+              --card-dim: var(--amber-dim);
+              --card-border: rgba(255,170,0,0.25);
+            ">
+            <div class="service-icon">🔧</div>
+            <h3 class="service-title">Reparacion Tecnica Técnica<br/>&amp; Mantenimiento de equipos</h3>
+            <p class="service-desc">Servicios de reparación y mantenimiento de equipos técnicos y electrónicos.</p>
+            <ul class="service-list">
+              <li>Servicios de reparación y mantenimiento de equiposelectrónicos</li>
+              <li>Servicios de diagnóstico sistemas electrónicos</li>
+              <li>Servicios de actualización y mejora de equipos existentes</li>
+              <li>Servicios de consultoría en soluciones técnicas</li>
+            </ul>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════
+         3. SECCIÓN PORTAFOLIO
+    ════════════════════════════════ -->
+    <section id="portafolio">
+      <div class="container">
+
+        <div class="section-header">
+          <span class="section-label">// 02 — Portafolio</span>
+          <h2 class="section-title">Proyectos <span class="accent-green">reales,</span><br/>resultados concretos.</h2>
+          <p class="section-desc">
+            Selección de trabajos que integran software, hardware y diseño en soluciones funcionales.
+          </p>
+        </div>
+
+        <!-- Grid de proyectos — 2 columnas en desktop, 1 en móvil -->
+        <div class="portfolio-grid">
+
+          <!-- ── PROYECTO 1 ──
+               Para agregar tu foto real:
+               1. Dentro de .project-thumb, reemplaza todo el div.thumb-placeholder
+               2. Por: <img src="ruta/a/tu-foto.jpg" alt="Descripción del proyecto" />
+          -->
+          <article class="project-card fade-in">
+            <div class="project-thumb">
+              <!-- PLACEHOLDER — reemplaza con tu imagen real -->
+              <div class="thumb-placeholder">
+                <div class="thumb-icon">🔩</div>
+                <img src="img/carroteleoperado.png" alt="Carro Teleoperado" />
+              </div>
+              <!-- Tags de tecnologías -->
+              <div class="project-tags">
+                <span class="tag">SolidWorks</span>
+                <span class="tag">Impresión 3D</span>
+              </div>
+            </div>
+            <div class="project-info">
+              <h3 class="project-title">Carrito Teleoperado desde cualquier parte </h3>
+              <p class="project-desc">
+                Descripción breve del proyecto: qué problema resolvió, qué tecnologías usó
+                y cuál fue el resultado final. Ej: Diseño y manufactura de soporte estructural
+                para sistema de visión industrial en celda robotizada.
+              </p>
+              <!-- Cambia href="#" por el link real (GitHub, Drive, etc.) -->
+              <a href="https://github.com/Soyesteban1" class="project-link">Ver proyecto <span>→</span></a>
+            </div>
+          </article>
+
+          <!-- ── PROYECTO 2 ── -->
+          <article class="project-card fade-in">
+            <div class="project-thumb">
+              <div class="thumb-placeholder">
+                <div class="thumb-icon">🐍</div>
+                <img src="img/modeloIA.png" alt="Modelo de IA" />
+              </div>
+              <div class="project-tags">
+                <span class="tag green">Python</span>
+                <span class="tag green">SQL</span>
+              </div>
+            </div>
+            <div class="project-info">
+              <h3 class="project-title">Automatización en Python e integracion de IA</h3>
+              <p class="project-desc">
+                Descripción del proyecto de software: automatización de tareas,
+                procesamiento de datos, conexión con bases de datos SQL,
+                o despliegue en entorno Linux.
+              </p>
+              <a href="https://github.com/Soyesteban1" class="project-link">Ver en GitHub <span>→</span></a>
+            </div>
+          </article>
+
+          <!-- ── PROYECTO 3 ── -->
+          <article class="project-card fade-in">
+            <div class="project-thumb">
+              <div class="thumb-placeholder">
+                <div class="thumb-icon">🤖</div>
+                <img src="img/reparacion.png" alt="Proyecto de Robótica / Electrónica" />
+              </div>
+              <div class="project-tags">
+                <span class="tag amber">Arduino</span>
+                <span class="tag amber">ESP32</span>
+              </div>
+            </div>
+            <div class="project-info">
+              <h3 class="project-title">Proyecto de Robótica / Electrónica</h3>
+              <p class="project-desc">
+                Descripción de tu proyecto de grado o de electrónica embebida:
+                sistema de control, sensores, actuadores y comunicación.
+                Ej: Robot seguidor de línea con control PID en ESP32.
+              </p>
+              <a href="https://github.com/Soyesteban1" class="project-link">Ver proyecto <span>→</span></a>
+            </div>
+          </article>
+
+          <!-- ── PROYECTO 4 ── -->
+          <article class="project-card fade-in">
+            <div class="project-thumb">
+              <div class="thumb-placeholder">
+                <div class="thumb-icon">📐</div>
+                <img src="img/impresion.png" alt="Impresión 3D" />
+              </div>
+              <div class="project-tags">
+                <span class="tag">CAD</span>
+                <span class="tag green">Git</span>
+              </div>
+            </div>
+            <div class="project-info">
+              <h3 class="project-title">Modelado CAD &amp; Ensamble SolidWorks</h3>
+              <p class="project-desc">
+                Descripción de un modelado 3D complejo: ensamble con restricciones,
+                simulación de movimiento, renderizado técnico y
+                generación de planos de fabricación.
+              </p>
+              <a href="https://github.com/Soyesteban1" class="project-link">Ver modelo <span>→</span></a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════
+         4. SECCIÓN SOBRE MÍ
+    ════════════════════════════════ -->
+    <section id="sobre-mi">
+      <div class="container">
+
+        <div class="section-header">
+          <span class="section-label">// 03 — Sobre mí</span>
+          <h2 class="section-title">El puente software <br/><span class="accent-cyan"> el el hardware mundo físico.</span></h2>
+        </div>
+
+        <!-- Grid de 2 columnas: foto + texto -->
+        <div class="about-grid">
+
+          <!-- Columna izquierda: avatar/foto -->
+          <div class="about-avatar fade-in">
+            <!-- PLACEHOLDER — reemplaza el div.avatar-placeholder con:
+                 <img src="tu-foto.jpg" alt="David Esteban" style="width:100%;height:100%;object-fit:cover;" />
+            -->
+            <img src="img/yo.jpeg" 
+                alt="David Esteban - Ingeniero Mecatrónico"
+                style="width:100%; height:100%; object-fit:cover; object-position: top center;" />
+          </div>    
+
+          <!-- Columna derecha: texto descriptivo -->
+          <div class="about-text fade-in">
+
+            <p>
+              Soy <strong style="color:var(--text-1)">Ingeniero Mecatrónico</strong> con sólida
+              experiencia en Desarrollo Full Stack y Diseño de Hardware. Mi perfil es genuinamente
+              híbrido: puedo escribir el algoritmo de control <em>y</em> fabricar el dispositivo físico
+              que lo ejecuta.
+            </p>
+
+            <p>
+              Trabajo con <span class="accent-cyan">con diferentes stacks de tecnologia</span> para construir soluciones de
+              software robustas, y con <span class="accent-green">SolidWorks e impresión 3D</span>
+              para materializar ideas en prototipos funcionales. Configuro entornos
+              <strong style="color:var(--text-1)">Linux</strong> y mantengo flujos de trabajo
+              profesionales con <strong style="color:var(--text-1)">Git</strong>.
+            </p>
+
+            <p>
+              Esa capacidad de moverme entre el mundo digital y el físico me permite entender
+              los proyectos de manera integral: el hardware que toca el código, y el código que
+              controla el hardware.
+            </p>
+
+            <!-- Stack de tecnologías como pills interactivos -->
+            <div class="tech-stack" role="list" aria-label="Stack tecnológico">
+              <span class="tech-pill" role="listitem">Python</span>
+              <span class="tech-pill" role="listitem">SQL</span>
+              <span class="tech-pill" role="listitem">Linux</span>
+              <span class="tech-pill" role="listitem">Git</span>
+              <span class="tech-pill" role="listitem">SolidWorks</span>
+              <span class="tech-pill" role="listitem">Impresión 3D</span>
+              <span class="tech-pill" role="listitem">Arduino</span>
+              <span class="tech-pill" role="listitem">ESP32</span>
+              <span class="tech-pill" role="listitem">Electrónica</span>
+              <span class="tech-pill" role="listitem">Cálculo</span>
+              <span class="tech-pill" role="listitem">Álgebra Lineal</span>
+              <span class="tech-pill" role="listitem">Robótica</span>
+              <span class="tech-pill" role="listitem">Raspberry Pi</span>
+              <span class="tech-pill" role="listitem">Pics-Microcontroladores</span>
+              <span class="tech-pill" role="listitem">Desarrollo de IA</span>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─────────────────────────────────────────────────────────
+       FOOTER: Contacto y cierre del sitio
+       id="contacto" → permite el scroll suave desde la navbar
+  ───────────────────────────────────────────────────────────── -->
+  <footer id="contacto" role="contentinfo">
+    <div class="container">
+
+      <!-- Grilla de 3 columnas: marca / nav / contacto -->
+      <div class="footer-grid">
+
+        <!-- Columna 1: Marca -->
+        <div class="footer-brand">
+          <div class="brand-name">SoyEsteban</div>
+          <p>
+            Ingeniero Mecatrónico · Desarrollador Full Stack · Diseñador de Hardware.
+            Disponible para proyectos, asesorías y tutorías en Colombia y remoto.
+          </p>
+          <!-- Redes sociales: cambia los href="#" por tus links reales -->
+          <div class="social-links" aria-label="Redes sociales">
+
+            <!-- GitHub -->
+            <a href="https://github.com/Soyesteban1"
+               class="social-btn"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="GitHub de David Esteban">
+              <!-- SVG del logo de GitHub -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a>
+
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/david-esteban-ingeniero-mecatronico/"
+               class="social-btn"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="LinkedIn de David Esteban">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+
+            <!-- WhatsApp -->
+            <a href="https://wa.me/573001234567" id="footer-whatsapp"
+               class="social-btn"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="WhatsApp de David Esteban">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.558 4.14 1.535 5.877L.057 23.43a.75.75 0 00.918.918l5.603-1.476A11.942 11.942 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.933 0-3.74-.5-5.31-1.378l-.38-.217-3.967 1.045 1.062-3.876-.238-.394A9.956 9.956 0 012 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/>
+              </svg>
+            </a>
+
+          </div>
+        </div>
+
+        <!-- Columna 2: Links de navegación rápida -->
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <ul>
+            <li><a href="#hero">Inicio</a></li>
+            <li><a href="#servicios">Servicios</a></li>
+            <li><a href="#portafolio">Portafolio</a></li>
+            <li><a href="#sobre-mi">Sobre mí</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Servicios rápidos -->
+        <div class="footer-col">
+          <h4>Servicios</h4>
+          <ul>
+            <li><a href="#servicios">Diseño 3D &amp; Prototipado</a></li>
+            <li><a href="#servicios">Automatización Python</a></li>
+            <li><a href="#servicios">Tutorías Matemáticas</a></li>
+            <li><a href="#servicios">Proyectos de Grado</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Línea divisora -->
+      <hr class="footer-divider" />
+
+      <!-- Pie de página -->
+      <div class="footer-bottom">
+        <p>© 2026 SoyEsteban — Todos los derechos reservados.</p>
+        <p>Hecho con HTML · CSS · JS — <span style="color:var(--cyan)">Colombia 🇨🇴</span></p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ─────────────────────────────────────────────────────────
+       BOTÓN FLOTANTE DE WHATSAPP
+       position: fixed → flota sobre todo el contenido
+       Se construye con CSS y el JS lo hace funcional
+  ───────────────────────────────────────────────────────────── -->
+  <a href="https://wa.me/573001234567" id="whatsapp-fab" class="whatsapp-fab" aria-label="Contactar por WhatsApp" target="_blank" rel="noopener noreferrer">
+    <!-- Ícono SVG de WhatsApp -->
+    <span class="wa-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.558 4.14 1.535 5.877L.057 23.43a.75.75 0 00.918.918l5.603-1.476A11.942 11.942 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.933 0-3.74-.5-5.31-1.378l-.38-.217-3.967 1.045 1.062-3.876-.238-.394A9.956 9.956 0 012 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/>
+      </svg>
+    </span>
+    <span class="wa-text">Escríbeme ahora</span>
+  </a>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       JAVASCRIPT — Al final del body (IMPORTANTE)
+       Los scripts van al final porque el HTML debe cargarse antes
+       de que JS intente buscar elementos por su id o clase.
+       ═══════════════════════════════════════════════════════════ -->
+  <script>
+
+    /* ─────────────────────────────────────────────
+       CONFIGURACIÓN PERSONALIZABLE
+       ← EDITA ESTOS VALORES con tus datos reales
+    ───────────────────────────────────────────── */
+    const CONFIG = {
+      // Tu número de WhatsApp con código de país (sin +, sin espacios, sin guiones)
+      // Colombia = 57. Ejemplo: "573001234567"
+      whatsappNumber: "+573127526537",
+
+      // Mensaje predefinido que aparece en WhatsApp al hacer clic
+      // %20 = espacio, %0A = salto de línea (URL encoding)
+      whatsappMessage: "Hola SoyEsteban, vi tu página web y me interesa cotizar un proyecto/asesoría con respecto a..."
+    };
+
+    /* ─────────────────────────────────────────────
+       FUNCIÓN: construir el link de WhatsApp
+       wa.me es el dominio oficial de WhatsApp para links directos
+    ───────────────────────────────────────────── */
+    function buildWhatsAppURL() {
+      // encodeURIComponent convierte el texto a formato URL seguro
+      // (espacios → %20, ñ → %C3%B1, etc.)
+      const message = encodeURIComponent(CONFIG.whatsappMessage);
+      return `https://wa.me/${CONFIG.whatsappNumber}?text=${message}`;
+    }
+
+    /* ─────────────────────────────────────────────
+       ASIGNAR LINKS DE WHATSAPP A TODOS LOS BOTONES
+       document.getElementById busca un elemento por su id
+       .href = "..." → cambia el destino del link
+    ───────────────────────────────────────────── */
+    const waURL = buildWhatsAppURL();
+
+    // Botón CTA principal del Hero
+    const ctaBtn = document.getElementById("cta-whatsapp");
+    if (ctaBtn) ctaBtn.href = waURL;
+
+    // Botón flotante (FAB)
+    const fabBtn = document.getElementById("whatsapp-fab");
+    if (fabBtn) fabBtn.href = waURL;
+
+    // Botón de WhatsApp en el footer
+    const footerWA = document.getElementById("footer-whatsapp");
+    if (footerWA) footerWA.href = waURL;
+
+    /* ─────────────────────────────────────────────
+       MENÚ HAMBURGUESA (MÓVIL)
+       Al hacer clic en el botón ☰, alterna la clase "open"
+       en la lista de links del menú.
+    ───────────────────────────────────────────── */
+    const navToggle = document.getElementById("nav-toggle");
+    const navLinks  = document.getElementById("nav-links");
+
+    navToggle.addEventListener("click", function() {
+      // .classList.toggle agrega la clase si no está, la quita si ya está
+      navLinks.classList.toggle("open");
+
+      // Actualiza el atributo de accesibilidad aria-expanded
+      const isOpen = navLinks.classList.contains("open");
+      navToggle.setAttribute("aria-expanded", isOpen);
+    });
+
+    // Cierra el menú móvil al hacer clic en cualquier link de navegación
+    navLinks.querySelectorAll("a").forEach(function(link) {
+      link.addEventListener("click", function() {
+        navLinks.classList.remove("open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    /* ─────────────────────────────────────────────
+       ANIMACIONES DE ENTRADA CON SCROLL (Intersection Observer)
+       Mucho más eficiente que escuchar el evento "scroll" constantemente.
+       IntersectionObserver detecta cuándo un elemento entra en la pantalla.
+    ───────────────────────────────────────────── */
+
+    // Selecciona todos los elementos que tienen la clase "fade-in"
+    const fadeElements = document.querySelectorAll(".fade-in");
+
+    // Crea el observador con opciones:
+    const observer = new IntersectionObserver(
+      function(entries) {
+        // entries = lista de elementos que cambiaron su estado de visibilidad
+        entries.forEach(function(entry) {
+          // entry.isIntersecting = true cuando el elemento está en pantalla
+          if (entry.isIntersecting) {
+            // Agrega la clase "visible" → activa la transición CSS
+            entry.target.classList.add("visible");
+            // Deja de observar el elemento (ya no necesita animarse de nuevo)
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.15,   // se activa cuando el 15% del elemento es visible
+        rootMargin: "0px"  // sin margen adicional
+      }
+    );
+
+    // Registra cada elemento ".fade-in" en el observador
+    fadeElements.forEach(function(el) {
+      observer.observe(el);
+    });
+
+    /* ─────────────────────────────────────────────
+       NAVBAR: efecto de fondo al hacer scroll
+       Agrega más opacidad al fondo de la navbar cuando
+       el usuario baja en la página.
+    ───────────────────────────────────────────── */
+    const navbar = document.querySelector(".navbar");
+
+    window.addEventListener("scroll", function() {
+      // window.scrollY = cuántos píxeles se bajó desde el tope
+      if (window.scrollY > 50) {
+        // Fondo más opaco al bajar
+        navbar.style.background = "rgba(5, 7, 9, 0.97)";
+      } else {
+        // Vuelve al fondo semitransparente en el tope
+        navbar.style.background = "rgba(5, 7, 9, 0.85)";
+      }
+    });
+
+    /* ─────────────────────────────────────────────
+       AÑO ACTUAL EN EL COPYRIGHT DEL FOOTER
+       Actualiza automáticamente el año sin tocar el HTML
+    ───────────────────────────────────────────── */
+    const footerYear = document.querySelector(".footer-bottom p");
+    if (footerYear) {
+      // new Date().getFullYear() retorna el año actual (ej: 2025)
+      footerYear.textContent = `© ${new Date().getFullYear()} SoyEsteban — Todos los derechos reservados.`;
+    }
+
+  </script>
+
+</body>
+</html>
